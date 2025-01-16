@@ -1,10 +1,11 @@
 import { getCompany } from "./db/companies.js";
-import { getJobs, getJob } from "./db/jobs.js";
+import { getJobs, getJob, getJobsByCompany } from "./db/jobs.js";
 
 export const resolvers = {
   Query: {
     jobs: getJobs,
     job: (_root, { id }) => getJob(id),
+    company: (_root, { id }) => getCompany(id),
   },
 
   Job: {
@@ -15,5 +16,6 @@ export const resolvers = {
 
   Company: {
     desc: ({ description }) => description,
+    jobs: ({ id }) => getJobsByCompany(id),
   },
 };
