@@ -14,7 +14,7 @@ function JobPage() {
   }, [jobId]);
 
   if (!job) {
-    return <p>Loading...</p>;
+    return <div>Loading...</div>;
   }
 
   return (

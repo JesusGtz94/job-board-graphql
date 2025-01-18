@@ -6,13 +6,20 @@ import JobList from "../components/JobList";
 function CompanyPage() {
   const { companyId } = useParams();
   const [company, setCompany] = useState();
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    getCompany(companyId).then(setCompany);
+    getCompany(companyId)
+      .then(setCompany)
+      .catch(() => setError(true));
   }, [companyId]);
 
+  if (error) {
+    return <div className="has-text-danger">Data unavailable</div>;
+  }
+
   if (!company) {
-    return <p>Loading...</p>;
+    return <div>Loading...</div>;
   }
 
   return (
