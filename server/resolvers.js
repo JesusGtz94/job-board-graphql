@@ -22,7 +22,7 @@ export const resolvers = {
   },
 
   Mutation: {
-    createJob: (__root, { title, desc }) => {
+    createJob: (__root, { job: { title, desc } }) => {
       const companyId = "FjcJCHJALA4i"; // TODO set based on user
       return createJob({ title, description: desc, companyId });
     },
