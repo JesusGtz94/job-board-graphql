@@ -29,20 +29,25 @@ export const resolvers = {
   },
 
   Mutation: {
-    createJob: (__root, { job: { title, desc } }, { auth }) => {
-      if (!auth) {
+    createJob: (__root, { job: { title, desc } }, { user }) => {
+      if (!user) {
         throw unauthorizedError("Missing authentication");
       }
 
-      const companyId = "FjcJCHJALA4i"; // TODO set based on user
-      return createJob({ title, description: desc, companyId });
+      return createJob({ title, description: desc, companyId: user.companyId });
     },
-    deleteJob: (__root, { id }) => {
-      try {
-        deleteJob(id);
-      } catch {
-        throw notFoundError("Not found job with id: " + id);
+    deleteJob: async (__root, { id }, { user }) => {
+      if (!user) {
+        throw unauthorizedError("Missing authentication");
       }
+
+      const job = await deleteJob(id, user.companyId);
+
+      if (!job) {
+        throw notFoundError("No job found with id " + id);
+      }
+
+      return job;
     },
     updateJob: (__root, { job: { id, title, desc } }) => {
       try {
