@@ -49,12 +49,22 @@ export const resolvers = {
 
       return job;
     },
-    updateJob: (__root, { job: { id, title, desc } }) => {
-      try {
-        return updateJob({ id, title, description: desc });
-      } catch {
-        throw notFoundError("Not found job with id: " + id);
+    updateJob: async (__root, { job: { id, title, desc } }, { user }) => {
+      if (!user) {
+        throw unauthorizedError("Missing authentication");
       }
+      const job = updateJob({
+        id,
+        title,
+        description: desc,
+        companyId: user.companyId,
+      });
+
+      if (!job) {
+        throw notFoundError("No job found with id " + id);
+      }
+
+      return job;
     },
   },
 
