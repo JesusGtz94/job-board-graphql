@@ -1,19 +1,17 @@
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { formatDate } from "../lib/formatters";
-import { useEffect, useState } from "react";
-import { getJob } from "../lib/grapql/queries";
+import { useGetJob } from "../hooks";
 
 function JobPage() {
   const { jobId } = useParams();
+  const { job, loading, error } = useGetJob(jobId);
 
-  const [job, setJob] = useState();
+  if (error) {
+    return <div className="has-text-danger">Data unavailable</div>;
+  }
 
-  useEffect(() => {
-    getJob(jobId).then(setJob);
-  }, [jobId]);
-
-  if (!job) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 

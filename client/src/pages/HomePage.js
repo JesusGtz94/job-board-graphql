@@ -1,23 +1,21 @@
-import { useEffect, useState } from "react";
 import JobList from "../components/JobList";
-import { getJobs } from "../lib/grapql/queries";
+import { useGetJobs } from "../hooks";
 
 function HomePage() {
-  const [jobs, setJobs] = useState();
-  const [error, setError] = useState();
+  const { jobs, loading, error } = useGetJobs();
 
-  useEffect(() => {
-    getJobs()
-      .then(setJobs)
-      .catch(() => setError("An error occurred."));
-  }, []);
+  if (error) {
+    return <div className="has-text-danger">Data unavailable</div>;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <h1 className="title">Job Board</h1>
-      {!jobs && !error && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {jobs && <JobList jobs={jobs} />}
+      <JobList jobs={jobs} />
     </div>
   );
 }
