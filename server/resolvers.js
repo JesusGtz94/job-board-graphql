@@ -1,4 +1,4 @@
-import { companyLoader, getCompany } from "./db/companies.js";
+import { getCompany } from "./db/companies.js";
 import {
   getJobs,
   getJob,
@@ -70,7 +70,9 @@ export const resolvers = {
 
   Job: {
     date: ({ createdAt }) => createdAt.split("T")[0],
-    company: ({ companyId }) => companyLoader.load(companyId),
+    company: ({ companyId }, _args, { companyLoader }) => {
+      return companyLoader.load(companyId);
+    },
     desc: ({ description }) => description,
   },
 
